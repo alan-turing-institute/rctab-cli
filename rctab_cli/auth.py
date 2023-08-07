@@ -1,0 +1,44 @@
+import atexit
+import logging
+from pathlib import Path
+
+import msal
+import requests
+import typer
+
+from .config import APP_NAME
+
+
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, token: str) -> None:
+        self.token = token
+
+    def __call__(self, r: requests.PreparedRequest) -> requests.PreparedRequest:
+        r.headers["authorization"] = "Bearer " + self.token
+        return r
+
+
+def write_cache(token_cache_f: Path, cache: msal.TokenCache) -> None:
+    if not token_cache_f.exists():
+        token_cache_f.touch(mode=0o700)
+
+    logging.info("Saving auth token to cache")
+    token_cache_f.write_text(cache.serialize())
+
+
+def load_cache() -> msal.TokenCache:
+    app_dir = Path(typer.get_app_dir(APP_NAME))
+    token_cache_f = app_dir / "cache.bin"
+    cache = msal.SerializableTokenCache()
+
+    if token_cache_f.exists():
+        cache.deserialize(token_cache_f.read_text(encoding="utf-8"))
+
+    atexit.register(
+        lambda: write_cache(token_cache_f, cache)
+        # Hint: The following optional line persists only when state changed
+        # if cache.has_state_changed
+        # else None
+    )
+
+    return cache
