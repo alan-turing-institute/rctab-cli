@@ -68,10 +68,10 @@ def acquire_access_token() -> Dict:
 
 def version_callback(value: bool) -> None:
     """Show the current CLI and API version.
-    
+
     Args:
         value: Whether to display the version.
-    
+
     Returns:
         None.
     """
@@ -123,7 +123,7 @@ def main(
 @app.command()
 def logout() -> None:
     """Clear the app cache and all login info.
-    
+
     Returns:
         None.
     """
@@ -142,10 +142,10 @@ def logout() -> None:
 @app.command()
 def request_access() -> None:
     """Request access to the RCTab API - required.
-    
+
     Raises:
         typer.Abort: If the API request fails.
-    
+
     Returns:
         None.
     """
@@ -167,7 +167,7 @@ def request_access() -> None:
 @app.command()
 def token() -> None:
     """Return an access token and display it.
-    
+
     Returns:
         None.
     """
@@ -177,7 +177,7 @@ def token() -> None:
 
 def get_api_version() -> Union[str, None]:
     """Get the RCTab CLI version.
-    
+
     Returns:
         The RCTab CLI version if the request is successful, else None.
     """

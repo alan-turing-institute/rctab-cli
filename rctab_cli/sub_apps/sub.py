@@ -28,13 +28,13 @@ subscription_app.add_typer(
 
 def raise_for_status(resp: requests.Response) -> None:
     """Check the status code of a response.
-    
+
     Args:
         resp: The response to check.
-    
+
     Raises:
         typer.Abort: If the response status code is not in the 200s.
-    
+
     Returns:
         None.
     """
@@ -62,10 +62,10 @@ def raise_for_status(resp: requests.Response) -> None:
 
 def add_subscription(subscription_id: UUID) -> None:
     """Add a subscription to the billing system.
-    
+
     Args:
         subscription_id: The ID of the subscription to add.
-    
+
     Returns:
         None.
     """
@@ -88,11 +88,11 @@ def add_subscription(subscription_id: UUID) -> None:
 
 def set_the_persistence(subscription_id: UUID, always_on: bool = False) -> None:
     """Set the persistence of a subscription.
-    
+
     Args:
         subscription_id: The ID of the subscription to set the persistence of.
         always_on: Whether the subscription should be always on.
-    
+
     Returns:
         None.
     """
@@ -119,7 +119,7 @@ def create_approval(
     force: bool = False,
 ) -> None:
     """Create an approval for a subscription.
-    
+
     Args:
         subscription_id: The ID of the subscription to approve.
         ticket: The ticket reference of the request made.
@@ -128,7 +128,7 @@ def create_approval(
         date_from: The date the approval is valid from.
         date_to: The date the approval is valid to.
         force: Whether to allow the date_from to be > 30 days ago.
-    
+
     Returns:
         None.
     """
@@ -159,12 +159,12 @@ def create_allocation(
     amount: float,
 ) -> None:
     """Create an allocation for a subscription.
-    
+
     Args:
         subscription_id: The ID of the subscription to allocate.
         ticket: The ticket reference of the request made.
         amount: The amount to allocate.
-    
+
     Returns:
         None.
     """

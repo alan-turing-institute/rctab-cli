@@ -93,7 +93,6 @@ def test_cost_recovery_raises() -> None:
 
     # Patch this only so that we can't accidentally contact the real server
     with patch("rctab_cli.sub_apps.sub.create_url"):
-
         with pytest.raises(typer.Abort):
             sub.cost_recovery(
                 # This will error as the date should be in YYYY-MM format

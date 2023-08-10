@@ -17,6 +17,7 @@ class CLIConfig(BaseSettings):
         base_url: Base URL of the API.
         port: Port of the API.
     """
+
     # e.g. "https://myapp.azurewebsites.net"
     base_url: str
 
@@ -37,13 +38,14 @@ class CLIConfig(BaseSettings):
             env_file: Name of the environment file.
             env_file_encoding: Encoding of the environment file.
         """
+
         env_file = ".env"
         env_file_encoding = "utf-8"
 
 
 class AuthSettings(BaseSettings):
     """Settings class for authentication.
-    
+
     Attributes:
         client_id: Client ID from Azure.
         auth_base_url: Base URL of the EU authentication endpoint.
@@ -68,6 +70,7 @@ class AuthSettings(BaseSettings):
             env_file: Name of the environment file.
             env_file_encoding: Encoding of the environment file.
         """
+
         env_file = ".auth.env"
         env_file_encoding = "utf-8"
 
@@ -75,7 +78,7 @@ class AuthSettings(BaseSettings):
 @lru_cache()
 def get_auth_settings() -> AuthSettings:
     """Create instance of AuthSettings.
-    
+
     Returns:
         Instance of AuthSettings.
     """
@@ -85,7 +88,7 @@ def get_auth_settings() -> AuthSettings:
 @lru_cache()
 def get_cli_settings() -> CLIConfig:
     """Create instance of CLIConfig.
-    
+
     Attributes:
         Instance of CLIConfig.
     """

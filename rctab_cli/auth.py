@@ -12,10 +12,11 @@ from .config import APP_NAME
 
 class BearerAuth(requests.auth.AuthBase):
     """Bearer authentication class.
-    
+
     Attributes:
         token: The token to use for authentication.
     """
+
     def __init__(self, token: str) -> None:
         self.token = token
 
@@ -26,11 +27,11 @@ class BearerAuth(requests.auth.AuthBase):
 
 def write_cache(token_cache_f: Path, cache: msal.TokenCache) -> None:
     """Save the token cache to a file.
-    
+
     Args:
         token_cache_f: The path to the token cache file.
         cache: The token cache.
-    
+
     Returns:
         None.
     """
@@ -43,7 +44,7 @@ def write_cache(token_cache_f: Path, cache: msal.TokenCache) -> None:
 
 def load_cache() -> msal.TokenCache:
     """Load the token cache from a file.
-    
+
     Returns:
         The token cache.
     """

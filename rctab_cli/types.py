@@ -10,8 +10,9 @@ DATE_FORMATS = ["%Y-%m-%d"]
 
 class RCTabURL(BaseModel):
     """A url endpoint for the rctab API.
-    
+
     Attributes:
         url: A url endpoint.
     """
+
     url: AnyHttpUrl
