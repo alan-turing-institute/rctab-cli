@@ -1,4 +1,8 @@
-"""Insert usage data via the API asynchronously. """
+"""Insert usage data via the API asynchronously.
+
+Attributes:
+    app: Typer object for the CLI.
+"""
 
 import logging
 import os
@@ -27,6 +31,10 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "WARNING"))
 
 
 def acquire_access_token() -> Dict:
+    """Get an access token from Azure.
+    Returns:
+        Access token.
+    """
     app_dir = Path(typer.get_app_dir(APP_NAME))
     app_dir.mkdir(0o700, exist_ok=True)
 
@@ -59,6 +67,14 @@ def acquire_access_token() -> Dict:
 
 
 def version_callback(value: bool) -> None:
+    """Show the current CLI and API version.
+    
+    Args:
+        value: Whether to display the version.
+    
+    Returns:
+        None.
+    """
     if value:
         cli_version = metadata.version(__package__)
         api_version = get_api_version()
@@ -104,15 +120,13 @@ def main(
     state.access_token = acquire_access_token
 
 
-# @app.command()
-# def login() -> None:
-#     """Obtain an access token from active directory"""
-#     typer.echo("Looks like you're logged in")
-
-
 @app.command()
 def logout() -> None:
-    """Clear the app cache and all login info."""
+    """Clear the app cache and all login info.
+    
+    Returns:
+        None.
+    """
 
     app_dir = Path(typer.get_app_dir(APP_NAME))
 
@@ -127,7 +141,14 @@ def logout() -> None:
 
 @app.command()
 def request_access() -> None:
-    """Request access to the RCTab API - required."""
+    """Request access to the RCTab API - required.
+    
+    Raises:
+        typer.Abort: If the API request fails.
+    
+    Returns:
+        None.
+    """
 
     path = "admin/request-access"
     endpoint = create_url(path)
@@ -145,13 +166,21 @@ def request_access() -> None:
 
 @app.command()
 def token() -> None:
-    """Return an access token."""
+    """Return an access token and display it.
+    
+    Returns:
+        None.
+    """
 
     typer.echo(state.get_access_token(), nl=False)
 
 
 def get_api_version() -> Union[str, None]:
-    """Return the RCTab CLI version"""
+    """Get the RCTab CLI version.
+    
+    Returns:
+        The RCTab CLI version if the request is successful, else None.
+    """
     path = "version"
     endpoint = create_url(path)
     state.access_token = acquire_access_token

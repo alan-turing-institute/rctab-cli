@@ -1,3 +1,9 @@
+"""Subscription management commands.
+
+Attributes:
+    subscription_app: Typer object for the subscription CLI.
+    finance_app: Typer object for the finance CLI.
+"""
 # pylint: disable=too-many-arguments, redefined-outer-name
 import calendar
 import json
@@ -21,6 +27,17 @@ subscription_app.add_typer(
 
 
 def raise_for_status(resp: requests.Response) -> None:
+    """Check the status code of a response.
+    
+    Args:
+        resp: The response to check.
+    
+    Raises:
+        typer.Abort: If the response status code is not in the 200s.
+    
+    Returns:
+        None.
+    """
     if 200 <= resp.status_code <= 299:
         return
 
@@ -44,6 +61,14 @@ def raise_for_status(resp: requests.Response) -> None:
 
 
 def add_subscription(subscription_id: UUID) -> None:
+    """Add a subscription to the billing system.
+    
+    Args:
+        subscription_id: The ID of the subscription to add.
+    
+    Returns:
+        None.
+    """
     path = "accounting/subscription"
     endpoint = create_url(path)
 
@@ -62,6 +87,15 @@ def add_subscription(subscription_id: UUID) -> None:
 
 
 def set_the_persistence(subscription_id: UUID, always_on: bool = False) -> None:
+    """Set the persistence of a subscription.
+    
+    Args:
+        subscription_id: The ID of the subscription to set the persistence of.
+        always_on: Whether the subscription should be always on.
+    
+    Returns:
+        None.
+    """
     path = "accounting/persistent"
     endpoint = create_url(path)
 
@@ -84,6 +118,20 @@ def create_approval(
     date_to: str,
     force: bool = False,
 ) -> None:
+    """Create an approval for a subscription.
+    
+    Args:
+        subscription_id: The ID of the subscription to approve.
+        ticket: The ticket reference of the request made.
+        amount: The amount to approve.
+        allocate: Whether to allocate the approved amount to the subscription.
+        date_from: The date the approval is valid from.
+        date_to: The date the approval is valid to.
+        force: Whether to allow the date_from to be > 30 days ago.
+    
+    Returns:
+        None.
+    """
     path = "accounting/approve"
     endpoint = create_url(path)
 
@@ -110,6 +158,16 @@ def create_allocation(
     ticket: str,
     amount: float,
 ) -> None:
+    """Create an allocation for a subscription.
+    
+    Args:
+        subscription_id: The ID of the subscription to allocate.
+        ticket: The ticket reference of the request made.
+        amount: The amount to allocate.
+    
+    Returns:
+        None.
+    """
     path = "accounting/topup"
     endpoint = create_url(path)
 
@@ -303,6 +361,7 @@ def finance_create(
     ticket: str = typer.Option(..., help="Helpdesk ticket reference"),
     priority: int = typer.Option(100, help="Lower number is higher priority"),
 ) -> None:
+    """Create a finance record for a subscription."""
     try:
         # The first day of the month
         date_from_date = date.fromisoformat(date_from + "-01")
@@ -360,6 +419,7 @@ def get_finance(
 def finance_get(
     finance_id: int = typer.Option(..., help="Finance ID"),
 ) -> None:
+    """Get a finance row from the database."""
     result = get_finance(finance_id)
     typer.echo(result)
 
@@ -379,6 +439,7 @@ def finance_update(
     ticket: str = typer.Option(None, help="Helpdesk ticket reference"),
     priority: int = typer.Option(None, help="Lower number is higher priority"),
 ) -> None:
+    """Update a finance record for a subscription."""
     endpoint = create_url("accounting/finances")
 
     # Get the finance object as it currently is in case we have only
@@ -441,6 +502,7 @@ def finance_delete(
     finance_id: int = typer.Option(..., help="Finance ID"),
     subscription_id: UUID = typer.Option(..., help="Subscription ID"),
 ) -> None:
+    """Delete a finance record for a subscription."""
     endpoint = create_url("accounting/finances")
 
     resp = requests.delete(
@@ -456,6 +518,7 @@ def finance_delete(
 def finance_list(
     subscription_id: UUID = typer.Option(..., help="Subscription ID"),
 ) -> None:
+    """List all finance records for a subscription."""
     endpoint = create_url("accounting/finance")
     resp = requests.get(
         endpoint,
@@ -475,6 +538,7 @@ def cost_recovery(
         False, "--for-real/--dry-run", help="Save the results to the database"
     ),
 ) -> None:
+    """Recover costs for a given month."""
     # The first day of the month
     try:
         month_date = date.fromisoformat(month + "-01")
