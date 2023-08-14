@@ -1,4 +1,4 @@
-"""Types for the rctab CLI.
+"""Types for the RCTab CLI.
 
 Attributes:
     DATE_FORMATS: A list of date formats.
@@ -9,10 +9,10 @@ DATE_FORMATS = ["%Y-%m-%d"]
 
 
 class RCTabURL(BaseModel):
-    """A url endpoint for the rctab API.
+    """A URL endpoint for the RCTab API.
 
     Attributes:
-        url: A url endpoint.
+        url: A URL endpoint.
     """
 
     url: AnyHttpUrl

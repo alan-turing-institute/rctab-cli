@@ -10,13 +10,13 @@ from .types import RCTabURL
 
 
 def create_url(path: str) -> str:
-    """Create and validate a url endpoint.
+    """Create and validate a URL endpoint.
 
     Args:
-        path: The endpoint path to the create.
+        path: The path part of the URL.
 
     Returns:
-        The url endpoint.
+        The URL of some resource on an RCTab API.
     """
     temp = str(RCTabURL(url=get_cli_settings().base_url_full + path).url)
     if state.verbose:
