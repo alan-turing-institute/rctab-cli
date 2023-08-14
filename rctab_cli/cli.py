@@ -95,28 +95,15 @@ def main(
     )
 ) -> None:
     """
-    The RCTab CLI.
+    Perform RCTab administrative duties.
 
-    What it does do:
+    With this CLI you can add subscriptions to RCTab, approve credits,
+    allocate approved credits, and check the status of all the above.
 
-    \b
-      - Add subscriptions to the Research Compute Billing System.
-      - Approve credits for a subscription.
-      - Allocate approved credits to a subscription.
-      - Check all the approvals and allocations made for a subscription.
-      - Get a summary of all the approvals, allocations and costs for all subscriptions.
+    The CLI cannot be used to create subscriptions on Azure. For that,
+    see the Azure CLI.
 
-    What it doesn't do:
-
-    \b
-      - Create subscriptions on Azure.
-      - Add users to a subscription.
-
-    Further information:
-
-    \b
-      - RCTab API : https://github.com/alan-turing-institute/rctab-api
-      - RCTab CLI : https://github.com/alan-turing-institute/rctab-cli
+    See also https://github.com/alan-turing-institute/rctab
     """
     state.access_token = acquire_access_token
 
