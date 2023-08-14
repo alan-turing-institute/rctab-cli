@@ -34,6 +34,7 @@ class State:
 
         Returns:
             The access token.
+
         Raises:
             ArithmeticError: If the access token is not valid.
         """

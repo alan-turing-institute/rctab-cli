@@ -94,8 +94,7 @@ def main(
         help="Display RCTab CLI version and API version.",
     )
 ) -> None:
-    """
-    Perform RCTab administrative duties.
+    """Perform RCTab administrative duties.
 
     With this CLI you can add subscriptions to RCTab, approve credits,
     allocate approved credits, and check the status of all the above.
