@@ -13,6 +13,7 @@ APP_NAME = "RCTab-CLI"
 
 class CLIConfig(BaseSettings):
     """CLI configuration settings class.
+
     Attributes:
         base_url: Base URL of the API.
         port: Port of the API.
@@ -27,6 +28,7 @@ class CLIConfig(BaseSettings):
     @property
     def base_url_full(self) -> str:
         """Create full URL from base URL and port.
+
         Returns:
             Full URL of the API.
         """
@@ -34,6 +36,7 @@ class CLIConfig(BaseSettings):
 
     class Config:
         """Config class for CLIConfig.
+
         Attributes:
             env_file: Name of the environment file.
             env_file_encoding: Encoding of the environment file.
@@ -59,6 +62,7 @@ class AuthSettings(BaseSettings):
     @property
     def authority(self) -> str:
         """Make authorized URL.
+
         Returns:
             Authorized URL.
         """
@@ -66,6 +70,7 @@ class AuthSettings(BaseSettings):
 
     class Config:
         """Config class for AuthSettings.
+
         Attributes:
             env_file: Name of the environment file.
             env_file_encoding: Encoding of the environment file.

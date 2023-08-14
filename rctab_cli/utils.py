@@ -1,3 +1,4 @@
+"""Utility functions for the CLI."""
 from pathlib import Path
 
 import typer
@@ -17,7 +18,6 @@ def create_url(path: str) -> str:
     Returns:
         The url endpoint.
     """
-
     temp = str(RCTabURL(url=get_cli_settings().base_url_full + path).url)
     if state.verbose:
         typer.echo(temp)

@@ -32,6 +32,7 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "WARNING"))
 
 def acquire_access_token() -> Dict:
     """Get an access token from Azure.
+
     Returns:
         Access token.
     """
@@ -90,11 +91,11 @@ def main(
     version: bool = typer.Option(  # pylint: disable=unused-argument
         False,
         callback=version_callback,
-        help="Display RCTab cli version and api version.",
+        help="Display RCTab CLI version and API version.",
     )
 ) -> None:
     """
-    A CLI for interacting with the Research Compute API.
+    The RCTab CLI.
 
     What it does do:
 
@@ -127,7 +128,6 @@ def logout() -> None:
     Returns:
         None.
     """
-
     app_dir = Path(typer.get_app_dir(APP_NAME))
 
     cache_dir = app_dir / "cache.bin"
@@ -149,7 +149,6 @@ def request_access() -> None:
     Returns:
         None.
     """
-
     path = "admin/request-access"
     endpoint = create_url(path)
     resp = requests.post(endpoint, auth=BearerAuth(state.get_access_token()))
@@ -171,7 +170,6 @@ def token() -> None:
     Returns:
         None.
     """
-
     typer.echo(state.get_access_token(), nl=False)
 
 

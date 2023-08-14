@@ -216,7 +216,6 @@ def add(
     skip_check: bool = typer.Option(False, "-y", help="Dont ask for confirmation"),
 ) -> None:
     """Add an existing subscription to the billing system and add funds."""
-
     if not skip_check:
         query = typer.style("Summary:\n", fg=typer.colors.RED)
         info = (
@@ -249,8 +248,7 @@ def set_persistence(
     subscription_id: UUID = typer.Option(..., help="Subscription id"),
     persistent: bool = typer.Option(..., help="Change subscription persistence"),
 ) -> None:
-    """Change the persistence of a subscription"""
-
+    """Change the persistence of a subscription."""
     set_the_persistence(subscription_id, always_on=persistent)
 
 
@@ -273,8 +271,7 @@ def approve(
         False, "--force", help="Allow date-from to be > 30 days ago"
     ),
 ) -> None:
-    """Approve credits for a subscription"""
-
+    """Approve credits for a subscription."""
     create_approval(
         subscription_id, ticket, amount, allocate, date_from, date_to, force
     )
@@ -286,8 +283,10 @@ def allocate(
     ticket: str = typer.Option(..., help="Helpdesk ticket reference"),
     amount: float = typer.Option(..., help="Amount to allocate"),
 ) -> None:
-    """Allocate credits a subscription. Funds must already be approved"""
+    """Allocate credits a subscription.
 
+    Funds must already be approved.
+    """
     create_allocation(subscription_id, ticket, amount)
 
 
@@ -295,8 +294,7 @@ def allocate(
 def approvals(
     subscription_id: UUID = typer.Option(..., help="Subscription id")
 ) -> None:
-    """List all approvals for a subscription"""
-
+    """List all approvals for a subscription."""
     path = "accounting/approvals"
     endpoint = create_url(path)
 
@@ -314,8 +312,7 @@ def approvals(
 def allocations(
     subscription_id: UUID = typer.Option(..., help="Subscription id")
 ) -> None:
-    """List all allocations for a subscription"""
-
+    """List all allocations for a subscription."""
     path = "accounting/allocations"
     endpoint = create_url(path)
 
@@ -333,6 +330,7 @@ def allocations(
 def summary(
     subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
 ) -> None:
+    """Get a summary of approvals, allocations and costs for one or all subscriptions."""
     path = "accounting/subscription"
     endpoint = create_url(path)
 
@@ -401,7 +399,8 @@ def get_finance(
 ) -> Dict[str, Union[float, str]]:
     """Retrieve a finance record from the server.
 
-    Not to be confused with finance_get, for the finance-get command."""
+    Not to be confused with finance_get, for the finance-get command.
+    """
     endpoint = create_url("accounting/finances")
 
     resp = requests.get(
@@ -425,7 +424,7 @@ def finance_get(
 
 
 class SubscriptionIdMismatch(Exception):
-    pass
+    """When the Subscription ID and Finance ID don't match."""
 
 
 @finance_app.command("update")

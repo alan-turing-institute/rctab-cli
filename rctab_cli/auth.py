@@ -18,9 +18,11 @@ class BearerAuth(requests.auth.AuthBase):
     """
 
     def __init__(self, token: str) -> None:
+        """Initialize the BearerAuth class."""
         self.token = token
 
     def __call__(self, r: requests.PreparedRequest) -> requests.PreparedRequest:
+        """Add the bearer token to the request headers."""
         r.headers["authorization"] = "Bearer " + self.token
         return r
 

@@ -31,6 +31,7 @@ class State:
 
     def get_access_token(self) -> str:
         """Get the access token.
+
         Returns:
             The access token.
         Raises:
