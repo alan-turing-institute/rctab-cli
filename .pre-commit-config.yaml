@@ -44,3 +44,11 @@ repos:
         entry: poetry run flake8
         language: system
         types: ['python']
+      - id: pydocstyle
+        name: pydocstyle
+        entry: poetry run pydocstyle --convention=google
+        language: system
+        types: ['python']
+        exclude: (?x)(
+          tests/
+          )
