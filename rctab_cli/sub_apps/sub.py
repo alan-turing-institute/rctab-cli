@@ -15,9 +15,9 @@ from uuid import UUID
 import requests
 import typer
 
-from ..auth import BearerAuth
-from ..state import state
-from ..utils import create_url
+from rctab_cli.auth import BearerAuth
+from rctab_cli.state import state
+from rctab_cli.utils import create_url
 
 subscription_app = typer.Typer(no_args_is_help=True)
 finance_app = typer.Typer(no_args_is_help=True)

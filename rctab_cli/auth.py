@@ -7,7 +7,7 @@ import msal
 import requests
 import typer
 
-from .config import APP_NAME
+from rctab_cli.config import APP_NAME
 
 
 class BearerAuth(requests.auth.AuthBase):

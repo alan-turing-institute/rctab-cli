@@ -3,10 +3,9 @@ from pathlib import Path
 
 import typer
 
+from rctab_cli.config import get_cli_settings
 from rctab_cli.state import state
-
-from .config import get_cli_settings
-from .types import RCTabURL
+from rctab_cli.types import RCTabURL
 
 
 def create_url(path: str) -> str:
