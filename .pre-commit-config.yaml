@@ -26,7 +26,7 @@ repos:
         types: ['python']
       - id: safety
         name: Safety
-        entry: poetry run safety check --full-report -i 40291 -i 40622 -i 42194 -i 42218 -i 42559
+        entry: poetry run safety check --full-report
         pass_filenames: false
         language: system
       - id: mypy
