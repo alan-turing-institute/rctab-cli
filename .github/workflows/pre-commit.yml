@@ -46,4 +46,8 @@ jobs:
         run: |
           python -m poetry install
 
+      - name: Check poetry.lock consistency
+        shell: bash
+        run: poetry check --lock
+
       - uses: pre-commit/action@v3.0.0
