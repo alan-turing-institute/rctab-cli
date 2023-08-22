@@ -1,6 +1,4 @@
 """Utility functions for the CLI."""
-from pathlib import Path
-
 import typer
 
 from rctab_cli.config import get_cli_settings
