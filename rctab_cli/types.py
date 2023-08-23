@@ -1,11 +1,5 @@
-"""Types for the RCTab CLI.
-
-Attributes:
-    DATE_FORMATS: A list of date formats.
-"""
+"""Types for the RCTab CLI."""
 from pydantic import AnyHttpUrl, BaseModel
-
-DATE_FORMATS = ["%Y-%m-%d"]
 
 
 class RCTabURL(BaseModel):

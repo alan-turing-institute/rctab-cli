@@ -1,6 +1,4 @@
 """Utility functions for the CLI."""
-from pathlib import Path
-
 import typer
 
 from rctab_cli.config import get_cli_settings
@@ -21,22 +19,3 @@ def create_url(path: str) -> str:
     if state.verbose:
         typer.echo(temp)
     return temp
-
-
-def file_exists_exception(file: Path) -> None:
-    """Log an error if file doesn't exist.
-
-    Args:
-        file: The file to check.
-
-    Raises:
-        typer.Abort: If the file doesn't exist.
-
-    Returns:
-        None
-
-    """
-    if not file.exists():
-        config_f = typer.style(str(file), fg=typer.colors.RED, bold=True)
-        typer.echo(f"File {config_f} does not exist")
-        raise typer.Abort()
