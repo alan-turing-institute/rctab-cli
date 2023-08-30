@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.7"
+          python-version: "3.8"
 
       - name: Bootstrap poetry
         shell: bash
@@ -45,5 +45,9 @@ jobs:
         shell: bash
         run: |
           python -m poetry install
+
+      - name: Check poetry.lock consistency
+        shell: bash
+        run: poetry check --lock
 
       - uses: pre-commit/action@v3.0.0
