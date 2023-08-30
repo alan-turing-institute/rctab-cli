@@ -55,6 +55,12 @@ Use this to get more information about the commands below
 rctab <cmd> --help
 ```
 
+Check you are using the most up to date versions of the CLI and API:
+
+```bash
+rctab --version
+```
+
 ### Configuration
 
 

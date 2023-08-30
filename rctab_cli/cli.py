@@ -11,6 +11,8 @@ try:
     from importlib import metadata  # type: ignore
 except ImportError:  # for Python<3.8
     import importlib_metadata as metadata  # type: ignore
+
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Union
 
@@ -83,6 +85,8 @@ def version_callback(value: bool) -> None:
         if api_version:
             version_str += f", API version {api_version}"
         typer.secho(version_str, fg=typer.colors.GREEN)
+        check_cli_version(cli_version)
+        check_api_version(api_version)
         raise typer.Exit()
 
 
@@ -172,6 +176,66 @@ def get_api_version() -> Union[str, None]:
     if resp.status_code != 200:
         return None
     return resp.json()["detail"]
+
+
+def check_api_version(api_version: Union[str, None]) -> None:
+    """Check the RCTab API version on Azure uses the latest Docker Hub image.
+
+    A list of docker image tags is retrieved from Docker Hub along with the time
+    when they were pushed. The latest image tag is then compared to the API version.
+
+    Args:
+        api_version: The RCTab API version on Azure.
+    """
+    url = "https://hub.docker.com/v2/repositories/turingrc/rctab-api/tags"
+    response = requests.get(url)
+    if api_version and response.status_code == 200 and response.json() != []:
+        tag_names = {
+            datetime.strptime(tag["tag_last_pushed"], "%Y-%m-%dT%H:%M:%S.%fZ"): tag[
+                "name"
+            ]
+            for tag in response.json()["results"]
+            if "release" not in tag["name"]
+        }
+        latest_tag = tag_names[max(tag_names.keys())]
+        if latest_tag != api_version:
+            typer.secho(
+                "You are using an old version of the RCTab API."
+                f"The latest version is {latest_tag}. Restart the webapp in the "
+                "Azure portal to update to the latest version.",
+                fg=typer.colors.YELLOW,
+            )
+
+
+def check_cli_version(cli_version: str) -> None:
+    """Check if the RCTab CLI version matches the latest release on GitHub.
+
+    A list of release tags is retrieved from the GitHub API along with the time
+    when it was published. The latest tag is then compared to the CLI version.
+
+    Args:
+        cli_version: The RCTab CLI package version.
+    """
+    url = "https://api.github.com/repos/alan-turing-institute/rctab-cli/releases"
+    headers = {
+        "Accept": "application/vnd.github.v3+json",
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200 and response.json() != []:
+        tags = {
+            datetime.strptime(tag["published_at"], "%Y-%m-%dT%H:%M:%SZ"): tag[
+                "tag_name"
+            ]
+            for tag in response.json()
+        }
+        latest_tag = tags[max(tags.keys())]
+        if latest_tag != cli_version:
+            typer.secho(
+                "You are using an old version of the RCTab CLI. The latest "
+                f"version is {latest_tag}. Pull the latest version from GitHub "
+                "(https:://github.com/alan-turing-institute/rctab-cli)",
+                fg=typer.colors.YELLOW,
+            )
 
 
 if __name__ == "__main__":
