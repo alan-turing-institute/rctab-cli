@@ -38,3 +38,8 @@ html_theme = "sphinx_rtd_theme"
 
 # -- Options for EPUB output
 epub_show_urls = "footnote"
+
+# -- Options for Subprojecttoctree
+
+is_subproject = True
+readthedocs_url = "https://rctab.readthedocs.io"
