@@ -1,10 +1,26 @@
 """Configuration file for the Sphinx documentation builder."""
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Project information
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "Lumache"
-copyright = "2021, Graziella"
-author = "Graziella"
+project = 'rctab-cli'
+copyright = "2023, The Alan Turing Institute's Research Computing Team"
+author = "The Alan Turing Institute's Research Computing Team"
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+templates_path = ['_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+html_theme = 'alabaster'
+html_static_path = ['_static']
+
 
 release = "0.1"
 version = "0.1.0"
@@ -29,8 +45,6 @@ intersphinx_disabled_domains = ["std"]
 # See also:
 # https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#confval-intersphinx_disabled_reftypes
 intersphinx_disabled_reftypes = ["*"]
-
-templates_path = ["_templates"]
 
 # -- Options for HTML output
 
