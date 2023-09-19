@@ -6,9 +6,13 @@
 Welcome to rctab-cli's documentation!
 =====================================
 
-.. subprojecttoctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. automodule:: rctab_cli.cli
+    :members:
+
+..
+    .. subprojecttoctree::
+       :maxdepth: 2
+       :caption: Contents:
 
 
 
