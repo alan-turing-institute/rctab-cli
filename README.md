@@ -1,5 +1,7 @@
 # RCTab CLI
 
+[![Documentation Status](https://readthedocs.org/projects/rctab-cli/badge/?version=latest)](https://rctab.readthedocs.io/projects/rctab-cli/en/latest/?badge=latest)
+
 A CLI for interacting with the [RCTab API](https://github.com/alan-turing-institute/rctab-api).
 
 ## What it does
