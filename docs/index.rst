@@ -6,14 +6,16 @@
 Welcome to rctab-cli's documentation!
 =====================================
 
-.. automodule:: rctab_cli.cli
-    :members:
-
 ..
     .. subprojecttoctree::
        :maxdepth: 2
        :caption: Contents:
 
+.. autosummary::
+   :toctree: _autosummary
+   :recursive:
+
+   rctab_cli
 
 
 Indices and tables
