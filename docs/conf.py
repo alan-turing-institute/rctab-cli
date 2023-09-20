@@ -66,3 +66,7 @@ epub_show_urls = "footnote"
 
 # is_subproject = True
 # readthedocs_url = "https://rctab.readthedocs.io"
+
+# -- Options for autosummary extension
+
+autosummary_generate = True
