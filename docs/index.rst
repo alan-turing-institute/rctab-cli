@@ -11,9 +11,16 @@ Welcome to rctab-cli's documentation!
        :maxdepth: 2
        :caption: Contents:
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+
+   sometext
+
 .. autosummary::
    :toctree: _autosummary
    :recursive:
+   :caption: Docstrings
 
    rctab_cli
 
