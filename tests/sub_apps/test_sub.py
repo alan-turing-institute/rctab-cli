@@ -11,8 +11,8 @@ from tests.utils import ExitCodeException
 runner = CliRunner()
 
 
-def test_create() -> None:
-    """Test create command with all commandline options."""
+def test_add() -> None:
+    """Test add command with all commandline options."""
 
     with patch("rctab_cli.sub_apps.sub.add_subscription") as mock_sub, patch(
         "rctab_cli.sub_apps.sub.set_the_persistence"
@@ -42,8 +42,8 @@ def test_create() -> None:
         )
 
 
-def test_create_defaults() -> None:
-    """Test create command with minimal commandline options."""
+def test_add_defaults() -> None:
+    """Test add command with minimal commandline options."""
 
     with patch("rctab_cli.sub_apps.sub.add_subscription") as mock_sub, patch(
         "rctab_cli.sub_apps.sub.set_the_persistence"
