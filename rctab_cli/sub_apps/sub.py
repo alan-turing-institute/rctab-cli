@@ -329,6 +329,9 @@ def allocations(
 @subscription_app.command()
 def summary(
     subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    show_rbac: bool = typer.Option(
+        False, "--show-rbac", help="Include the role assignments"
+    ),
 ) -> None:
     """Get a summary of approvals, allocations and costs for one or all subscriptions."""
     path = "accounting/subscription"
@@ -346,7 +349,13 @@ def summary(
     )
 
     raise_for_status(resp)
-    typer.echo(json.dumps(resp.json(), indent=4, sort_keys=True))
+
+    summaries = resp.json()
+    if not show_rbac:
+        for item in summaries:
+            item.pop("role_assignments")
+
+    typer.echo(json.dumps(summaries, indent=4, sort_keys=True))
 
 
 @finance_app.command("create")

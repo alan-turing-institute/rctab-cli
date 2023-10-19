@@ -1,7 +1,8 @@
 from datetime import date
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 from uuid import UUID
 
+import requests
 from typer.testing import CliRunner
 
 from rctab_cli import cli
@@ -136,3 +137,62 @@ def test_approve_defaults() -> None:
             "2020-02-01",
             False,
         )
+
+
+def test_summary() -> None:
+    """Test summary command with all commandline options."""
+    with patch("requests.get", autospec=True) as mock_get, patch(
+        "rctab_cli.sub_apps.sub.create_url", autospec=True
+    ), patch("rctab_cli.sub_apps.sub.state", autospec=True), patch(
+        "rctab_cli.sub_apps.sub.BearerAuth", autospec=True
+    ), patch(
+        "typer.echo", autospec=True
+    ) as mock_echo, patch(
+        "json.dumps", autospec=True
+    ) as mock_dumps:
+        mock_response = MagicMock(spec=requests.Response)
+        mock_response.status_code = 200
+        mock_response.json.return_value = [{"role_assignments": []}]
+        mock_get.return_value = mock_response
+
+        sub.summary(subscription_id=UUID(int=1), show_rbac=True)
+
+        # Expect role assignments to be included.
+        mock_dumps.assert_called_once_with(
+            [{"role_assignments": []}], indent=4, sort_keys=True
+        )
+        mock_echo.assert_called_once_with(mock_dumps.return_value)
+
+
+def test_summary_defaults() -> None:
+    """Test summary command with minimal commandline options."""
+    with patch("requests.get", autospec=True) as mock_get, patch(
+        "rctab_cli.sub_apps.sub.create_url", autospec=True
+    ), patch("rctab_cli.sub_apps.sub.state", autospec=True), patch(
+        "rctab_cli.sub_apps.sub.BearerAuth", autospec=True
+    ), patch(
+        "typer.echo", autospec=True
+    ) as mock_echo, patch(
+        "json.dumps", autospec=True
+    ) as mock_dumps:
+        mock_response = MagicMock(spec=requests.Response)
+        mock_response.status_code = 200
+        mock_response.json.return_value = [{"role_assignments": []}]
+        mock_get.return_value = mock_response
+
+        # More complicated invocation needed to test default params.
+        result = runner.invoke(
+            cli.app,
+            [
+                "sub",
+                "summary",
+                "--subscription-id",
+                str(UUID(int=1)),
+            ],
+        )
+        if result.exit_code != 0:
+            raise ExitCodeException(result)
+
+        # Expect role assignments to have been removed.
+        mock_dumps.assert_called_once_with([{}], indent=4, sort_keys=True)
+        mock_echo.assert_called_once_with(mock_dumps.return_value)
