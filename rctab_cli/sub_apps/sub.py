@@ -4,6 +4,7 @@ Attributes:
     subscription_app: Typer object for the subscription CLI.
     finance_app: Typer object for the finance CLI.
 """
+
 # pylint: disable=too-many-arguments, redefined-outer-name
 import calendar
 import json

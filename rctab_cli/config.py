@@ -3,6 +3,7 @@
 Attributes:
     APP_NAME: Name of the CLI application.
 """
+
 from functools import lru_cache
 from uuid import UUID
 

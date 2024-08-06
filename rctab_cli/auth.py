@@ -1,4 +1,5 @@
 """Authentication helpers for the RCTab CLI."""
+
 import atexit
 import logging
 from pathlib import Path

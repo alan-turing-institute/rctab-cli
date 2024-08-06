@@ -1,4 +1,5 @@
 """Types for the RCTab CLI."""
+
 from pydantic import AnyHttpUrl, BaseModel
 
 
