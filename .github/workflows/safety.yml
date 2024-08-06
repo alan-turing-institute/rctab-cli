@@ -52,4 +52,4 @@ jobs:
 
       - uses: pre-commit/action@v3.0.1
         with:
-          extra_args: --config .pre-commit-safety.yaml
+          extra_args: --all-files --config .pre-commit-safety.yaml
