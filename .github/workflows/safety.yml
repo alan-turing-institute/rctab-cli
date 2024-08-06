@@ -49,3 +49,5 @@ jobs:
       - uses: pre-commit/action@v3.0.1
         with:
           extra_args: --all-files --config .pre-commit-safety.yaml
+        env:
+          SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
