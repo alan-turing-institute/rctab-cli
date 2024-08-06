@@ -1,4 +1,5 @@
 """Utilities for testing."""
+
 from click.testing import Result
 
 

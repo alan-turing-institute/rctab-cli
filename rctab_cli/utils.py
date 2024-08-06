@@ -1,4 +1,5 @@
 """Utility functions for the CLI."""
+
 import typer
 
 from rctab_cli.config import get_cli_settings
