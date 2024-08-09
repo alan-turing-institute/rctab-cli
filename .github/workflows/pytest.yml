@@ -44,7 +44,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          python -m poetry install
+          python -m poetry install --all-extras
 
       - name: Run pytest
         shell: bash
