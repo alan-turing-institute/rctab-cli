@@ -23,14 +23,20 @@ You should also install [pre-commit](https://pre-commit.com) and install the pre
 pre-commit install --install-hooks
 ```
 
-set an environment variable with your [safety API key](https://docs.safetycli.com/safety-docs/support/invalid-api-key-error#how-to-get-a-safety-api-key):
+run the non-safety pre-commit hooks with
+
+```bash
+pre-commit run --all-files
+```
+
+set an environment variable with your [safety API key](https://docs.safetycli.com/safety-docs/support/invalid-api-key-error#how-to-get-a-safety-api-key)
 
 ```bash
 export SAFETY_API_KEY=your-api-key
 ```
 
-and run the checks with
+and run the safety hook with
 
 ```bash
-pre-commit run --all-files
+pre-commit run --all-files --config .pre-commit-safety.yaml
 ```
