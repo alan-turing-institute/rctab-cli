@@ -13,15 +13,14 @@ runner = CliRunner()
 def test_cost_recovery() -> None:
     """Test cost-recovery command with all commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.post"
-    ) as mock_post, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.post") as mock_post,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
 
         sub.cost_recovery(month="2020-01", for_real=True)
@@ -42,15 +41,14 @@ def test_cost_recovery() -> None:
 def test_cost_recovery_defaults() -> None:
     """Test finance command with minimal commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.get"
-    ) as mock_get, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.get") as mock_get,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
 
         # We can use the --dry-run option...

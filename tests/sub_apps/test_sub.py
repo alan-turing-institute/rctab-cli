@@ -15,9 +15,11 @@ runner = CliRunner()
 def test_add() -> None:
     """Test add command with all commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.add_subscription") as mock_sub, patch(
-        "rctab_cli.sub_apps.sub.set_the_persistence"
-    ) as mock_persist, patch("rctab_cli.sub_apps.sub.create_approval") as mock_approve:
+    with (
+        patch("rctab_cli.sub_apps.sub.add_subscription") as mock_sub,
+        patch("rctab_cli.sub_apps.sub.set_the_persistence") as mock_persist,
+        patch("rctab_cli.sub_apps.sub.create_approval") as mock_approve,
+    ):
         sub.add(
             subscription_id=UUID(int=1),
             persistent=True,
@@ -46,9 +48,11 @@ def test_add() -> None:
 def test_add_defaults() -> None:
     """Test add command with minimal commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.add_subscription") as mock_sub, patch(
-        "rctab_cli.sub_apps.sub.set_the_persistence"
-    ) as mock_persist, patch("rctab_cli.sub_apps.sub.create_approval") as mock_approve:
+    with (
+        patch("rctab_cli.sub_apps.sub.add_subscription") as mock_sub,
+        patch("rctab_cli.sub_apps.sub.set_the_persistence") as mock_persist,
+        patch("rctab_cli.sub_apps.sub.create_approval") as mock_approve,
+    ):
         # More complicated invocation needed to test default params.
         result = runner.invoke(
             cli.app,
@@ -141,15 +145,14 @@ def test_approve_defaults() -> None:
 
 def test_summary() -> None:
     """Test summary command with all commandline options."""
-    with patch("requests.get", autospec=True) as mock_get, patch(
-        "rctab_cli.sub_apps.sub.create_url", autospec=True
-    ), patch("rctab_cli.sub_apps.sub.state", autospec=True), patch(
-        "rctab_cli.sub_apps.sub.BearerAuth", autospec=True
-    ), patch(
-        "typer.echo", autospec=True
-    ) as mock_echo, patch(
-        "json.dumps", autospec=True
-    ) as mock_dumps:
+    with (
+        patch("requests.get", autospec=True) as mock_get,
+        patch("rctab_cli.sub_apps.sub.create_url", autospec=True),
+        patch("rctab_cli.sub_apps.sub.state", autospec=True),
+        patch("rctab_cli.sub_apps.sub.BearerAuth", autospec=True),
+        patch("typer.echo", autospec=True) as mock_echo,
+        patch("json.dumps", autospec=True) as mock_dumps,
+    ):
         mock_response = MagicMock(spec=requests.Response)
         mock_response.status_code = 200
         mock_response.json.return_value = [{"role_assignments": []}]
@@ -166,15 +169,14 @@ def test_summary() -> None:
 
 def test_summary_defaults() -> None:
     """Test summary command with minimal commandline options."""
-    with patch("requests.get", autospec=True) as mock_get, patch(
-        "rctab_cli.sub_apps.sub.create_url", autospec=True
-    ), patch("rctab_cli.sub_apps.sub.state", autospec=True), patch(
-        "rctab_cli.sub_apps.sub.BearerAuth", autospec=True
-    ), patch(
-        "typer.echo", autospec=True
-    ) as mock_echo, patch(
-        "json.dumps", autospec=True
-    ) as mock_dumps:
+    with (
+        patch("requests.get", autospec=True) as mock_get,
+        patch("rctab_cli.sub_apps.sub.create_url", autospec=True),
+        patch("rctab_cli.sub_apps.sub.state", autospec=True),
+        patch("rctab_cli.sub_apps.sub.BearerAuth", autospec=True),
+        patch("typer.echo", autospec=True) as mock_echo,
+        patch("json.dumps", autospec=True) as mock_dumps,
+    ):
         mock_response = MagicMock(spec=requests.Response)
         mock_response.status_code = 200
         mock_response.json.return_value = [{"role_assignments": []}]

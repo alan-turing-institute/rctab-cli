@@ -15,15 +15,14 @@ runner = CliRunner()
 def test_finance_create() -> None:
     """Test finance create command with all commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.post"
-    ) as mock_post, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.post") as mock_post,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
 
         sub.finance_create(
@@ -57,15 +56,14 @@ def test_finance_create() -> None:
 def test_finance_create_defaults() -> None:
     """Test finance create command with minimal commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.post"
-    ) as mock_post, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.post") as mock_post,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
 
         # More complicated invocation needed to test default params.
@@ -136,15 +134,14 @@ def test_finance_create_raises() -> None:
 def test_finance_get() -> None:
     """Test finance get command."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.get"
-    ) as mock_get, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.get") as mock_get,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
 
         # More complicated invocation needed to test default params.
@@ -170,17 +167,15 @@ def test_finance_get() -> None:
 def test_finance_update() -> None:
     """Test finance update command with all commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.put"
-    ) as mock_put, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo, patch(
-        "rctab_cli.sub_apps.sub.get_finance"
-    ) as mock_get_finance:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.put") as mock_put,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+        patch("rctab_cli.sub_apps.sub.get_finance") as mock_get_finance,
+    ):
         mock_get_finance.return_value = {
             "finance_id": 1,
             "subscription_id": str(UUID(int=1)),
@@ -220,15 +215,13 @@ def test_finance_update() -> None:
 def test_finance_does_not_update() -> None:
     """Test finance update command only updates when necessary."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "requests.put"
-    ) as mock_put, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo, patch(
-        "rctab_cli.sub_apps.sub.get_finance"
-    ) as mock_get_finance:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("requests.put") as mock_put,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+        patch("rctab_cli.sub_apps.sub.get_finance") as mock_get_finance,
+    ):
         mock_get_finance.return_value = {
             "finance_id": 1,
             "subscription_id": str(UUID(int=2)),
@@ -262,15 +255,13 @@ def test_finance_does_not_update() -> None:
 def test_finance_update_defaults() -> None:
     """Test finance update command with minimal commandline options."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "requests.put"
-    ) as mock_put, patch(
-        "rctab_cli.sub_apps.sub.get_finance"
-    ) as mock_get_finance, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("requests.put") as mock_put,
+        patch("rctab_cli.sub_apps.sub.get_finance") as mock_get_finance,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
         mock_get_finance.return_value = {
             "finance_id": 1,
@@ -311,9 +302,10 @@ def test_finance_update_defaults() -> None:
 def test_finance_update_raises() -> None:
     """Test finance_update raises if the subscription IDs don't match."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.get_finance"
-    ) as mock_get_finance:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.get_finance") as mock_get_finance,
+    ):
         mock_url.return_value = "fake.url"
         mock_get_finance.return_value = {
             "finance_id": 1,
@@ -349,15 +341,14 @@ def test_finance_update_raises() -> None:
 def test_finance_list() -> None:
     """Test finance list command."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.get"
-    ) as mock_get, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.get") as mock_get,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
 
         # More complicated invocation needed to test default params.
@@ -389,15 +380,14 @@ def test_finance_list() -> None:
 def test_finance_delete() -> None:
     """Test finance delete command."""
 
-    with patch("rctab_cli.sub_apps.sub.create_url") as mock_url, patch(
-        "rctab_cli.sub_apps.sub.BearerAuth"
-    ) as mock_auth, patch("rctab_cli.sub_apps.sub.state") as mock_state, patch(
-        "requests.delete"
-    ) as mock_delete, patch(
-        "rctab_cli.sub_apps.sub.raise_for_status"
-    ) as mock_raise_for_status, patch(
-        "typer.echo"
-    ) as mock_echo:
+    with (
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.delete") as mock_delete,
+        patch("rctab_cli.sub_apps.sub.raise_for_status") as mock_raise_for_status,
+        patch("typer.echo") as mock_echo,
+    ):
         mock_url.return_value = "fake.url"
 
         # More complicated invocation needed to test default params.
