@@ -486,12 +486,14 @@ def finance_update(
         date_to_date = date(date_to_date.year, date_to_date.month, month_range[1])
         new_finance["date_to"] = date_to_date.isoformat()
 
-    new_finance["amount"] = amount if amount else old_finance["amount"]
+    new_finance["amount"] = amount if amount is not None else old_finance["amount"]
     new_finance["finance_code"] = (
         finance_code if finance_code else old_finance["finance_code"]
     )
     new_finance["ticket"] = ticket if ticket else old_finance["ticket"]
-    new_finance["priority"] = priority if priority else old_finance["priority"]
+    new_finance["priority"] = (
+        priority if priority is not None else old_finance["priority"]
+    )
 
     if new_finance == old_finance:
         typer.echo("Finance records identical. Taking no action.")
