@@ -1,6 +1,7 @@
 """Utility functions for the CLI."""
 
 import typer
+from pydantic import AnyHttpUrl
 
 from rctab_cli.config import get_cli_settings
 from rctab_cli.state import state
@@ -16,7 +17,9 @@ def create_url(path: str) -> str:
     Returns:
         The URL of some resource on an RCTab API.
     """
-    temp = str(RCTabURL(url=get_cli_settings().base_url_full + path).url)
+    temp = str(
+        RCTabURL(url=AnyHttpUrl(url=get_cli_settings().base_url_full + path)).url
+    )
     if state.verbose:
         typer.echo(temp)
     return temp
