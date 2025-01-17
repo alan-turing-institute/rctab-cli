@@ -3,7 +3,7 @@ authors = []
 description = "The Command Line Interface for RCTab."
 dynamic = [ "dependencies" ]
 name = "rctab_cli"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 version = "0.1.0"
 
 [tool.poetry.group.main.dependencies]
