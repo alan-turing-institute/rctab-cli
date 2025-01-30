@@ -4,7 +4,7 @@ description = "The Command Line Interface for RCTab."
 dynamic = [ "dependencies" ]
 name = "rctab_cli"
 requires-python = ">=3.10"
-version = "0.1.0"
+version = "0.1.1"
 
 [tool.poetry.group.main.dependencies]
 msal = "^1.31.0"
