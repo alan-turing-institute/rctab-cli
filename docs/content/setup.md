@@ -14,7 +14,7 @@ Then from the root of the repository, install dependencies and activate a Poetry
 
 ```bash
 poetry install
-poetry shell
+eval $(poetry env activate)
 ```
 
 You should also install [pre-commit](https://pre-commit.com) and install the pre-commit hooks with
