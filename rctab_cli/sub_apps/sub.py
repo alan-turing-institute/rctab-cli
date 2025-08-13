@@ -192,7 +192,7 @@ def add(
         ..., help="Subscription id", prompt="Subscription id"
     ),
     persistent: bool = typer.Option(
-        False, "--persistant", help="Set subscription to have no budget cap"
+        False, "--persistent", help="Set subscription to have no budget cap"
     ),
     ticket: str = typer.Option(
         ..., help="Helpdesk ticket reference", prompt="Helpdesk ticket reference"
