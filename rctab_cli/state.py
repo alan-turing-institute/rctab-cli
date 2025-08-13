@@ -37,11 +37,11 @@ class State:
             The access token.
 
         Raises:
-            ArithmeticError: If the access token is not valid.
+            ValueError: If the access token is not available.
         """
         if self.access_token:
             return self.access_token()["access_token"]
-        raise ArithmeticError
+        raise ValueError("Access token not available")
 
 
 state = State(access_token=None)
