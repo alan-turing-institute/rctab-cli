@@ -43,22 +43,15 @@ def raise_for_status(resp: requests.Response) -> None:
         return
 
     try:
-        try:
-            detail = resp.json()
-        except JSONDecodeError:
-            detail = resp.content
-
-        typer.secho(
-            f"\nFailed with status code: {resp.status_code}. Details: {detail}",
-            fg=typer.colors.RED,
-        )
-        raise typer.Abort()
-
+        detail = resp.json()
     except JSONDecodeError:
-        typer.echo(
-            f"\nFailed with status code: {resp.status_code}. Contact the development team"
-        )
-        raise typer.Abort()
+        detail = resp.content
+
+    typer.secho(
+        f"\nFailed with status code: {resp.status_code}. Details: {detail}",
+        fg=typer.colors.RED,
+    )
+    raise typer.Abort()
 
 
 def add_subscription(subscription_id: UUID) -> None:
