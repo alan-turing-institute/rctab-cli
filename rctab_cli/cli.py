@@ -233,7 +233,7 @@ def check_cli_version(cli_version: str) -> None:
             typer.secho(
                 "You are using an old version of the RCTab CLI. The latest "
                 f"version is {latest_tag}. Pull the latest version from GitHub "
-                "(https:://github.com/alan-turing-institute/rctab-cli)",
+                "(https://github.com/alan-turing-institute/rctab-cli)",
                 fg=typer.colors.YELLOW,
             )
 
