@@ -10,11 +10,12 @@ import calendar
 import json
 from datetime import date
 from json.decoder import JSONDecodeError
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 from uuid import UUID
 
 import requests
 import typer
+from typer.models import OptionInfo
 
 from rctab_cli.auth import BearerAuth
 from rctab_cli.state import state
@@ -179,11 +180,74 @@ def create_allocation(
     typer.echo(resp.json())
 
 
+def get_subscription_id_by_name(subscription_name: str) -> UUID:
+    """Resolve a subscription name to a subscription ID."""
+    endpoint = create_url("accounting/subscription")
+    resp = requests.get(
+        endpoint,
+        auth=BearerAuth(state.get_access_token()),
+    )
+    raise_for_status(resp)
+
+    matches: List[UUID] = []
+    for item in resp.json():
+        item_name = item["subscription_name"]
+        item_id = item["subscription_id"]
+        if item_name == subscription_name:
+            matches.append(UUID(item_id))
+
+    if not matches:
+        typer.secho(
+            f"Subscription name not found: {subscription_name}",
+            fg=typer.colors.RED,
+        )
+        raise typer.Abort()
+
+    if len(matches) > 1:
+        typer.secho(
+            f"Subscription name is ambiguous: {subscription_name}",
+            fg=typer.colors.RED,
+        )
+        raise typer.Abort()
+
+    return matches[0]
+
+
+def resolve_subscription_id(
+    subscription_id: Optional[UUID],
+    subscription_name: Optional[str],
+    required: bool = True,
+) -> Optional[UUID]:
+    """Resolve a subscription identifier from ID or name."""
+    if isinstance(subscription_id, OptionInfo):
+        subscription_id = None
+    if isinstance(subscription_name, OptionInfo):
+        subscription_name = None
+
+    if subscription_id and subscription_name:
+        typer.secho(
+            "Use exactly one of --subscription-id or --subscription-name",
+            fg=typer.colors.RED,
+        )
+        raise typer.Abort()
+
+    if subscription_name:
+        return get_subscription_id_by_name(subscription_name)
+
+    if required and subscription_id is None:
+        typer.secho(
+            "One of --subscription-id or --subscription-name is required",
+            fg=typer.colors.RED,
+        )
+        raise typer.Abort()
+
+    return subscription_id
+
+
 @subscription_app.command()
 def add(
-    subscription_id: UUID = typer.Option(
-        ..., help="Subscription id", prompt="Subscription id"
-    ),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
     persistent: bool = typer.Option(
         False, "--persistent", help="Set subscription to have no budget cap"
     ),
@@ -210,6 +274,7 @@ def add(
     skip_check: bool = typer.Option(False, "-y", help="Dont ask for confirmation"),
 ) -> None:
     """Add an existing subscription to the billing system and add funds."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     if not skip_check:
         query = typer.style("Summary:\n", fg=typer.colors.RED)
         info = (
@@ -239,16 +304,19 @@ def add(
 
 @subscription_app.command()
 def set_persistence(
-    subscription_id: UUID = typer.Option(..., help="Subscription id"),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
     persistent: bool = typer.Option(..., help="Change subscription persistence"),
 ) -> None:
     """Change the persistence of a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     set_the_persistence(subscription_id, always_on=persistent)
 
 
 @subscription_app.command()
 def approve(
-    subscription_id: UUID = typer.Option(..., help="Subscription id"),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
     ticket: str = typer.Option(..., help="Helpdesk ticket reference"),
     amount: float = typer.Option(..., help="Amount to approve"),
     allocate: bool = typer.Option(
@@ -266,6 +334,7 @@ def approve(
     ),
 ) -> None:
     """Approve credits for a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     create_approval(
         subscription_id, ticket, amount, allocate, date_from, date_to, force
     )
@@ -273,7 +342,8 @@ def approve(
 
 @subscription_app.command()
 def allocate(
-    subscription_id: UUID = typer.Option(..., help="Subscription id"),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
     ticket: str = typer.Option(..., help="Helpdesk ticket reference"),
     amount: float = typer.Option(..., help="Amount to allocate"),
 ) -> None:
@@ -281,14 +351,17 @@ def allocate(
 
     Funds must already be approved.
     """
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     create_allocation(subscription_id, ticket, amount)
 
 
 @subscription_app.command()
 def approvals(
-    subscription_id: UUID = typer.Option(..., help="Subscription id")
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
 ) -> None:
     """List all approvals for a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     path = "accounting/approvals"
     endpoint = create_url(path)
 
@@ -304,9 +377,11 @@ def approvals(
 
 @subscription_app.command()
 def allocations(
-    subscription_id: UUID = typer.Option(..., help="Subscription id")
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
 ) -> None:
     """List all allocations for a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     path = "accounting/allocations"
     endpoint = create_url(path)
 
@@ -323,11 +398,17 @@ def allocations(
 @subscription_app.command()
 def summary(
     subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
     show_rbac: bool = typer.Option(
         False, "--show-rbac", help="Include the role assignments"
     ),
 ) -> None:
     """Get a summary of approvals, allocations and costs for one or all subscriptions."""
+    subscription_id = resolve_subscription_id(
+        subscription_id,
+        subscription_name,
+        required=False,
+    )
     path = "accounting/subscription"
     endpoint = create_url(path)
 
@@ -354,7 +435,8 @@ def summary(
 
 @finance_app.command("create")
 def finance_create(
-    subscription_id: UUID = typer.Option(..., help="Subscription ID"),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
     date_from: str = typer.Option(..., help="Start date, in YYYY-MM format"),
     date_to: str = typer.Option(..., help="End date, in YYYY-MM format"),
     amount: float = typer.Option(..., help="Amount to finance"),
@@ -363,6 +445,7 @@ def finance_create(
     priority: int = typer.Option(100, help="Lower number is higher priority"),
 ) -> None:
     """Create a finance record for a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     try:
         # The first day of the month
         date_from_date = date.fromisoformat(date_from + "-01")
@@ -433,7 +516,8 @@ class SubscriptionIdMismatch(Exception):
 @finance_app.command("update")
 def finance_update(
     finance_id: int = typer.Option(..., help="Finance ID"),
-    subscription_id: UUID = typer.Option(..., help="Subscription ID"),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
     date_from: str = typer.Option(None, help="Start date, in YYYY-MM format"),
     date_to: str = typer.Option(None, help="End date, in YYYY-MM format"),
     amount: float = typer.Option(None, help="Amount to finance"),
@@ -442,6 +526,7 @@ def finance_update(
     priority: int = typer.Option(None, help="Lower number is higher priority"),
 ) -> None:
     """Update a finance record for a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     endpoint = create_url("accounting/finances")
 
     # Get the finance object as it currently is in case we have only
@@ -504,9 +589,11 @@ def finance_update(
 @finance_app.command("delete")
 def finance_delete(
     finance_id: int = typer.Option(..., help="Finance ID"),
-    subscription_id: UUID = typer.Option(..., help="Subscription ID"),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
 ) -> None:
     """Delete a finance record for a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     endpoint = create_url("accounting/finances")
 
     resp = requests.delete(
@@ -520,9 +607,11 @@ def finance_delete(
 
 @finance_app.command("list")
 def finance_list(
-    subscription_id: UUID = typer.Option(..., help="Subscription ID"),
+    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
+    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
 ) -> None:
     """List all finance records for a subscription."""
+    subscription_id = resolve_subscription_id(subscription_id, subscription_name)
     endpoint = create_url("accounting/finance")
     resp = requests.get(
         endpoint,

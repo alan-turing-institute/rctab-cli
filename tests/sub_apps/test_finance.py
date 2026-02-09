@@ -416,3 +416,164 @@ def test_finance_delete() -> None:
         mock_url.assert_called_once_with("accounting/finances")
         mock_raise_for_status.assert_called_once_with(mock_delete.return_value)
         mock_echo.assert_called_once_with(mock_delete.return_value.json.return_value)
+
+
+def test_finance_create_subscription_name() -> None:
+    """Test finance create resolves subscription name."""
+    with (
+        patch("rctab_cli.sub_apps.sub.get_subscription_id_by_name") as mock_lookup,
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.post") as mock_post,
+        patch("rctab_cli.sub_apps.sub.raise_for_status"),
+        patch("typer.echo"),
+    ):
+        mock_lookup.return_value = UUID(int=1)
+        mock_url.return_value = "fake.url"
+        result = runner.invoke(
+            app,
+            [
+                "sub",
+                "finance",
+                "create",
+                "--subscription-name",
+                "my-subscription",
+                "--date-from",
+                "2020-01",
+                "--date-to",
+                "2020-01",
+                "--amount",
+                "10",
+                "--finance-code",
+                "max",
+                "--ticket",
+                "TICKET",
+            ],
+        )
+        if result.exit_code != 0:
+            raise ExitCodeException(result)
+
+        mock_lookup.assert_called_once_with("my-subscription")
+        assert mock_post.call_args.kwargs["json"]["subscription_id"] == str(UUID(int=1))
+        mock_auth.assert_called_once_with(mock_state.get_access_token.return_value)
+
+
+def test_finance_update_subscription_name() -> None:
+    """Test finance update resolves subscription name."""
+    with (
+        patch("rctab_cli.sub_apps.sub.get_subscription_id_by_name") as mock_lookup,
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("rctab_cli.sub_apps.sub.get_finance") as mock_get_finance,
+        patch("requests.put") as mock_put,
+        patch("rctab_cli.sub_apps.sub.raise_for_status"),
+        patch("typer.echo"),
+    ):
+        mock_lookup.return_value = UUID(int=2)
+        mock_url.return_value = "fake.url"
+        mock_get_finance.return_value = {
+            "finance_id": 1,
+            "subscription_id": str(UUID(int=2)),
+            "date_from": "2001-01-01",
+            "date_to": "2001-01-31",
+            "amount": 5.0,
+            "finance_code": "test-code",
+            "ticket": "test-ticket",
+            "priority": 101,
+        }
+        result = runner.invoke(
+            app,
+            [
+                "sub",
+                "finance",
+                "update",
+                "--finance-id",
+                "1",
+                "--subscription-name",
+                "my-subscription",
+                "--amount",
+                "6",
+            ],
+        )
+        if result.exit_code != 0:
+            raise ExitCodeException(result)
+
+        mock_lookup.assert_called_once_with("my-subscription")
+        assert mock_put.call_args.kwargs["json"]["subscription_id"] == str(UUID(int=2))
+        assert mock_put.call_args.kwargs["json"]["amount"] == 6.0
+        assert mock_put.call_args.kwargs["auth"] == mock_auth.return_value
+        mock_auth.assert_called_once_with(mock_state.get_access_token.return_value)
+
+
+def test_finance_list_subscription_name() -> None:
+    """Test finance list resolves subscription name."""
+    with (
+        patch("rctab_cli.sub_apps.sub.get_subscription_id_by_name") as mock_lookup,
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.get") as mock_get,
+        patch("rctab_cli.sub_apps.sub.raise_for_status"),
+        patch("typer.echo"),
+    ):
+        mock_lookup.return_value = UUID(int=1)
+        mock_url.return_value = "fake.url"
+        result = runner.invoke(
+            app,
+            [
+                "sub",
+                "finance",
+                "list",
+                "--subscription-name",
+                "my-subscription",
+            ],
+        )
+        if result.exit_code != 0:
+            raise ExitCodeException(result)
+
+        mock_lookup.assert_called_once_with("my-subscription")
+        mock_get.assert_called_once_with(
+            "fake.url",
+            json={"sub_id": str(UUID(int=1))},
+            auth=mock_auth.return_value,
+        )
+        mock_auth.assert_called_once_with(mock_state.get_access_token.return_value)
+
+
+def test_finance_delete_subscription_name() -> None:
+    """Test finance delete resolves subscription name."""
+    with (
+        patch("rctab_cli.sub_apps.sub.get_subscription_id_by_name") as mock_lookup,
+        patch("rctab_cli.sub_apps.sub.create_url") as mock_url,
+        patch("rctab_cli.sub_apps.sub.BearerAuth") as mock_auth,
+        patch("rctab_cli.sub_apps.sub.state") as mock_state,
+        patch("requests.delete") as mock_delete,
+        patch("rctab_cli.sub_apps.sub.raise_for_status"),
+        patch("typer.echo"),
+    ):
+        mock_lookup.return_value = UUID(int=1)
+        mock_url.return_value = "fake.url"
+        result = runner.invoke(
+            app,
+            [
+                "sub",
+                "finance",
+                "delete",
+                "--subscription-name",
+                "my-subscription",
+                "--finance-id",
+                "1",
+            ],
+        )
+        if result.exit_code != 0:
+            raise ExitCodeException(result)
+
+        mock_lookup.assert_called_once_with("my-subscription")
+        mock_delete.assert_called_once_with(
+            "fake.url/1",
+            json={"sub_id": str(UUID(int=1))},
+            auth=mock_auth.return_value,
+        )
+        mock_auth.assert_called_once_with(mock_state.get_access_token.return_value)
