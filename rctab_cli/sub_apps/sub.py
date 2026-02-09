@@ -15,7 +15,6 @@ from uuid import UUID
 
 import requests
 import typer
-from typer.models import OptionInfo
 
 from rctab_cli.auth import BearerAuth
 from rctab_cli.state import state
@@ -182,66 +181,59 @@ def create_allocation(
 
 def get_subscription_id_by_name(subscription_name: str) -> UUID:
     """Resolve a subscription name to a subscription ID."""
-    endpoint = create_url("accounting/subscription")
+    endpoint = create_url("accounting/subscription-id")
     resp = requests.get(
         endpoint,
+        params={"display_name": str(subscription_name)},
         auth=BearerAuth(state.get_access_token()),
     )
     raise_for_status(resp)
 
-    matches: List[UUID] = []
-    for item in resp.json():
-        item_name = item["subscription_name"]
-        item_id = item["subscription_id"]
-        if item_name == subscription_name:
-            matches.append(UUID(item_id))
+    matches: List[UUID] = [UUID(x) for x in resp.json()]
 
-    if not matches:
-        typer.secho(
-            f"Subscription name not found: {subscription_name}",
-            fg=typer.colors.RED,
-        )
-        raise typer.Abort()
-
-    if len(matches) > 1:
-        typer.secho(
-            f"Subscription name is ambiguous: {subscription_name}",
-            fg=typer.colors.RED,
-        )
-        raise typer.Abort()
-
-    return matches[0]
+    match matches:
+        case []:
+            typer.secho(
+                f"Subscription name not found: {subscription_name}",
+                fg=typer.colors.RED,
+            )
+            raise typer.Abort()
+        case [match]:
+            return match
+        case _:
+            # More than one match.
+            typer.secho(
+                f"Subscription name is ambiguous: {subscription_name}",
+                fg=typer.colors.RED,
+            )
+            raise typer.Abort()
 
 
 def resolve_subscription_id(
     subscription_id: Optional[UUID],
     subscription_name: Optional[str],
-    required: bool = True,
-) -> Optional[UUID]:
+) -> UUID:
     """Resolve a subscription identifier from ID or name."""
-    if isinstance(subscription_id, OptionInfo):
-        subscription_id = None
-    if isinstance(subscription_name, OptionInfo):
-        subscription_name = None
-
-    if subscription_id and subscription_name:
-        typer.secho(
-            "Use exactly one of --subscription-id or --subscription-name",
-            fg=typer.colors.RED,
-        )
-        raise typer.Abort()
-
-    if subscription_name:
-        return get_subscription_id_by_name(subscription_name)
-
-    if required and subscription_id is None:
-        typer.secho(
-            "One of --subscription-id or --subscription-name is required",
-            fg=typer.colors.RED,
-        )
-        raise typer.Abort()
-
-    return subscription_id
+    match (subscription_id, subscription_name):
+        case (subscription_id, None):
+            assert subscription_name is not None
+            return subscription_id
+        case (None, subscription_name):
+            assert subscription_name is not None  # typing
+            return get_subscription_id_by_name(subscription_name)
+        case (None, None):
+            typer.secho(
+                "One of --subscription-id or --subscription-name is required",
+                fg=typer.colors.RED,
+            )
+            raise typer.Abort()
+        case _:
+            # Both have been supplied.
+            typer.secho(
+                "Use exactly one of --subscription-id or --subscription-name",
+                fg=typer.colors.RED,
+            )
+            raise typer.Abort()
 
 
 @subscription_app.command()
@@ -404,25 +396,22 @@ def summary(
     ),
 ) -> None:
     """Get a summary of approvals, allocations and costs for one or all subscriptions."""
-    subscription_id = resolve_subscription_id(
-        subscription_id,
-        subscription_name,
-        required=False,
-    )
+    params = {}
+    if subscription_id or subscription_name:
+        params["sub_id"] = str(
+            resolve_subscription_id(
+                subscription_id,
+                subscription_name,
+            )
+        )
     path = "accounting/subscription"
     endpoint = create_url(path)
-
-    params = {}
-
-    if subscription_id:
-        params["sub_id"] = str(subscription_id)
 
     resp = requests.get(
         endpoint,
         params=params,
         auth=BearerAuth(state.get_access_token()),
     )
-
     raise_for_status(resp)
 
     summaries = resp.json()
