@@ -6,7 +6,7 @@ name = "rctab_cli"
 requires-python = ">=3.10"
 version = "1.1.0"
 
-[tool.poetry.group.main.dependencies]
+[tool.poetry.dependencies]
 msal = "^1.31.0"
 typer = "^0.15.1"
 aiohttp = "^3.7.4"
