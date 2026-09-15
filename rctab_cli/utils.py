@@ -1,8 +1,7 @@
 """Utility functions for the CLI."""
 
 import typer
-from pydantic import AnyHttpUrl
-from pydantic.tools import parse_obj_as
+from pydantic import AnyHttpUrl, TypeAdapter
 
 from rctab_cli.config import get_cli_settings
 from rctab_cli.state import state
@@ -20,7 +19,9 @@ def create_url(path: str) -> str:
     """
     temp = str(
         RCTabURL(
-            url=parse_obj_as(AnyHttpUrl, get_cli_settings().base_url_full + path)
+            url=TypeAdapter(AnyHttpUrl).validate_python(
+                get_cli_settings().base_url_full + path
+            )
         ).url
     )
     if state.verbose:
