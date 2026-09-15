@@ -7,7 +7,8 @@ Attributes:
 from functools import lru_cache
 from uuid import UUID
 
-from pydantic import BaseSettings, HttpUrl
+from pydantic import HttpUrl
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 APP_NAME = "RCTab-CLI"
 
@@ -26,6 +27,8 @@ class CLIConfig(BaseSettings):
     # Typically 443 for https and 80 for http and 8000 for local development
     port: int
 
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
     @property
     def base_url_full(self) -> str:
         """Create full URL from base URL and port.
@@ -34,17 +37,6 @@ class CLIConfig(BaseSettings):
             Full URL of the API.
         """
         return f"{self.base_url}:{self.port}/"
-
-    class Config:
-        """Config class for CLIConfig.
-
-        Attributes:
-            env_file: Name of the environment file.
-            env_file_encoding: Encoding of the environment file.
-        """
-
-        env_file = ".env"
-        env_file_encoding = "utf-8"
 
 
 class AuthSettings(BaseSettings):
@@ -60,6 +52,8 @@ class AuthSettings(BaseSettings):
     auth_base_url: HttpUrl = "https://login.microsoftonline.com/"  # type: ignore
     tenant_id: UUID
 
+    model_config = SettingsConfigDict(env_file=".auth.env", env_file_encoding="utf-8")
+
     @property
     def authority(self) -> str:
         """Make authorized URL.
@@ -67,18 +61,7 @@ class AuthSettings(BaseSettings):
         Returns:
             Authorized URL.
         """
-        return self.auth_base_url + str(self.tenant_id)
-
-    class Config:
-        """Config class for AuthSettings.
-
-        Attributes:
-            env_file: Name of the environment file.
-            env_file_encoding: Encoding of the environment file.
-        """
-
-        env_file = ".auth.env"
-        env_file_encoding = "utf-8"
+        return str(self.auth_base_url) + str(self.tenant_id)
 
 
 @lru_cache()
