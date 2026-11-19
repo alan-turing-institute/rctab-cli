@@ -36,7 +36,7 @@ class CLIConfig(BaseSettings):
         Returns:
             Full URL of the API.
         """
-        return f"{self.base_url}:{self.port}/"
+        return f"{self.base_url}:{self.port}/"  #
 
 
 class AuthSettings(BaseSettings):
