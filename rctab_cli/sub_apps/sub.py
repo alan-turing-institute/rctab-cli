@@ -214,32 +214,29 @@ def resolve_subscription_id(
     subscription_name: Optional[str],
 ) -> UUID:
     """Resolve a subscription identifier from ID or name."""
-    match (subscription_id, subscription_name):
-        case (subscription_id, None):
-            assert subscription_name is not None
-            return subscription_id
-        case (None, subscription_name):
-            assert subscription_name is not None  # typing
-            return get_subscription_id_by_name(subscription_name)
-        case (None, None):
-            typer.secho(
-                "One of --subscription-id or --subscription-name is required",
-                fg=typer.colors.RED,
-            )
-            raise typer.Abort()
-        case _:
-            # Both have been supplied.
-            typer.secho(
-                "Use exactly one of --subscription-id or --subscription-name",
-                fg=typer.colors.RED,
-            )
-            raise typer.Abort()
+    if subscription_id is not None and subscription_name is None:
+        return subscription_id
+    if subscription_id is None and subscription_name is not None:
+        return get_subscription_id_by_name(subscription_name)
+    if subscription_id is None and subscription_name is None:
+        typer.secho(
+            "One of --subscription-id or --subscription-name is required",
+            fg=typer.colors.RED,
+        )
+        raise typer.Abort()
+
+    # Both have been supplied.
+    typer.secho(
+        "Use exactly one of --subscription-id or --subscription-name",
+        fg=typer.colors.RED,
+    )
+    raise typer.Abort()
 
 
 @subscription_app.command()
 def add(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
     persistent: bool = typer.Option(
         False, "--persistent", help="Set subscription to have no budget cap"
     ),
@@ -296,8 +293,8 @@ def add(
 
 @subscription_app.command()
 def set_persistence(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
     persistent: bool = typer.Option(..., help="Change subscription persistence"),
 ) -> None:
     """Change the persistence of a subscription."""
@@ -307,8 +304,8 @@ def set_persistence(
 
 @subscription_app.command()
 def approve(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
     ticket: str = typer.Option(..., help="Helpdesk ticket reference"),
     amount: float = typer.Option(..., help="Amount to approve"),
     allocate: bool = typer.Option(
@@ -334,8 +331,8 @@ def approve(
 
 @subscription_app.command()
 def allocate(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
     ticket: str = typer.Option(..., help="Helpdesk ticket reference"),
     amount: float = typer.Option(..., help="Amount to allocate"),
 ) -> None:
@@ -349,8 +346,8 @@ def allocate(
 
 @subscription_app.command()
 def approvals(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
 ) -> None:
     """List all approvals for a subscription."""
     subscription_id = resolve_subscription_id(subscription_id, subscription_name)
@@ -369,8 +366,8 @@ def approvals(
 
 @subscription_app.command()
 def allocations(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
 ) -> None:
     """List all allocations for a subscription."""
     subscription_id = resolve_subscription_id(subscription_id, subscription_name)
@@ -389,8 +386,8 @@ def allocations(
 
 @subscription_app.command()
 def summary(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription id"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
     show_rbac: bool = typer.Option(
         False, "--show-rbac", help="Include the role assignments"
     ),
@@ -424,8 +421,8 @@ def summary(
 
 @finance_app.command("create")
 def finance_create(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
     date_from: str = typer.Option(..., help="Start date, in YYYY-MM format"),
     date_to: str = typer.Option(..., help="End date, in YYYY-MM format"),
     amount: float = typer.Option(..., help="Amount to finance"),
@@ -505,8 +502,8 @@ class SubscriptionIdMismatch(Exception):
 @finance_app.command("update")
 def finance_update(
     finance_id: int = typer.Option(..., help="Finance ID"),
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
     date_from: str = typer.Option(None, help="Start date, in YYYY-MM format"),
     date_to: str = typer.Option(None, help="End date, in YYYY-MM format"),
     amount: float = typer.Option(None, help="Amount to finance"),
@@ -578,8 +575,8 @@ def finance_update(
 @finance_app.command("delete")
 def finance_delete(
     finance_id: int = typer.Option(..., help="Finance ID"),
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
 ) -> None:
     """Delete a finance record for a subscription."""
     subscription_id = resolve_subscription_id(subscription_id, subscription_name)
@@ -596,8 +593,8 @@ def finance_delete(
 
 @finance_app.command("list")
 def finance_list(
-    subscription_id: Optional[UUID] = typer.Option(None, help="Subscription ID"),
-    subscription_name: Optional[str] = typer.Option(None, help="Subscription name"),
+    subscription_id: Optional[UUID] = None,
+    subscription_name: Optional[str] = None,
 ) -> None:
     """List all finance records for a subscription."""
     subscription_id = resolve_subscription_id(subscription_id, subscription_name)
