@@ -4,6 +4,8 @@ import importlib
 
 import pytest
 
+from rctab_cli.config import AuthSettings, CLIConfig
+
 
 def test_import_rctab_cli() -> None:
     """Importing the package should not raise, even at pydantic import time."""
@@ -13,7 +15,6 @@ def test_import_rctab_cli() -> None:
 
 def test_cli_config_instantiates(monkeypatch: pytest.MonkeyPatch) -> None:
     """CLIConfig should build from environment variables."""
-    from rctab_cli.config import CLIConfig
 
     monkeypatch.setenv("BASE_URL", "https://my-rctab.azurewebsites.net")
     monkeypatch.setenv("PORT", "443")
@@ -27,7 +28,6 @@ def test_cli_config_instantiates(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_auth_settings_instantiates(monkeypatch: pytest.MonkeyPatch) -> None:
     """AuthSettings should build from environment variables."""
-    from rctab_cli.config import AuthSettings
 
     monkeypatch.setenv("CLIENT_ID", "00000000-0000-0000-0000-000000000009")
     monkeypatch.setenv("TENANT_ID", "00000000-0000-0000-0000-00000000000a")
