@@ -1802,14 +1802,14 @@ six = ">=1.5.2"
 
 [[package]]
 name = "pre-commit"
-version = "2.21.0"
+version = "4.7.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.11"
 groups = ["dev"]
 files = [
-    {file = "pre_commit-2.21.0-py2.py3-none-any.whl", hash = "sha256:e2f91727039fc39a92f58a588a25b87f936de6567eed4f0e673e0507edc75bad"},
-    {file = "pre_commit-2.21.0.tar.gz", hash = "sha256:31ef31af7e474a8d8995027fefdfcf509b5c913ff31f2015b4ec4beb26a6f658"},
+    {file = "pre_commit-4.7.0-py2.py3-none-any.whl", hash = "sha256:2e229038ad3656081b70c27913157e4b636ef306f643f024a8a8e3f0f7b2f877"},
+    {file = "pre_commit-4.7.0.tar.gz", hash = "sha256:1f3deee12b914c8fa184bd2b5953391c2e4f36763e403d4a23dc9983fa7c6e86"},
 ]
 
 [package.dependencies]
@@ -3010,4 +3010,4 @@ docs = ["myst-parser", "sphinx-rtd-theme", "sphinxcontrib-napoleon"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "b6f791713ae4692275f7c7534a2ba5bd8d81ddc514748b2fd225c8dd79499358"
+content-hash = "96fd3fe68451884f75678f24ee3fae14bbffbc37d970a8ae5d00aa812acd323c"
