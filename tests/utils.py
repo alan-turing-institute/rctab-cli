@@ -1,6 +1,6 @@
 """Utilities for testing."""
 
-from click.testing import Result
+from typer.testing import Result
 
 
 class ExitCodeException(Exception):
