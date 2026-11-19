@@ -26,8 +26,9 @@ repos:
         types: ['python']
       - id: mypy
         name: MyPy
-        entry: poetry run mypy --install-types --non-interactive
+        entry: poetry run mypy --install-types --non-interactive docs/ tests/ rctab_cli/
         language: system
+        pass_filenames: false
         types: ['python']
       - id: pylint
         name: Pylint
