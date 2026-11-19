@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  runner-job:
+  lint:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
