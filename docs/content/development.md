@@ -97,7 +97,7 @@ Pytest runs on every pull request to `main` (`.github/workflows/pytest.yml`).
 
 ## Code quality
 
-Checks are enforced by [pre-commit](https://pre-commit.com) and mirrored in CI: black, isort, mypy, pylint (`.python-lint`), flake8 and pydocstyle (Google convention, excluding `tests/`).
+Checks are enforced by [pre-commit](https://pre-commit.com) and mirrored in CI: black, isort, mypy, pylint (`.python-lint`) and pydocstyle (Google convention, excluding `tests/`).
 Gitleaks runs as a pre-commit hook and as a workflow, and `safety` runs from the separate `.pre-commit-safety.yaml` config.
 
 ```bash

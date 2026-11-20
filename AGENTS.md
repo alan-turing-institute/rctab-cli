@@ -47,7 +47,7 @@ out just above it. So:
 rctab_cli/
 ├── cli.py          # Typer app, top-level commands, MSAL token acquisition
 ├── auth.py         # token cache + bearer auth
-├── config.py       # CLIConfig (.env) and AuthSettings (.auth.env), pydantic v1 BaseSettings
+├── config.py       # CLIConfig (.env) and AuthSettings (.auth.env), pydantic-settings BaseSettings
 ├── state.py        # global `state`: access token + verbosity
 ├── types.py        # URL validation types
 ├── utils.py        # create_url() and helpers
@@ -83,12 +83,17 @@ prompts.
 ## Code quality
 
 Run `pre-commit run --all-files`. The hooks (also enforced in CI) are black, isort, mypy,
-pylint (`.python-lint`), flake8, pydocstyle (Google convention, excluding `tests/`) and
+pylint (`.python-lint`), pydocstyle (Google convention, excluding `tests/`) and
 gitleaks. `safety` runs separately via `.pre-commit-safety.yaml`.
 
 Everything in `rctab_cli/` is fully type-annotated and has Google-style docstrings — match
-that. Note this is **pydantic v1** (`BaseSettings` imported from `pydantic`); don't
-"modernise" it to v2 syntax.
+that. Settings use **pydantic v2** with `BaseSettings` from `pydantic-settings`.
+
+CI runs `pytest` against every supported Python version (a matrix in
+`.github/workflows/pytest.yml`). Lint and safety run once, on the minimum supported
+version, and mypy (`mypy.ini`) and pylint (`.python-lint`) target that minimum explicitly.
+When changing `requires-python` in `pyproject.toml`, update all of these, the classifiers
+and `.readthedocs.yaml` to match.
 
 ## Never commit
 

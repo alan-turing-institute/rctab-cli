@@ -9,17 +9,23 @@ on:
 
 jobs:
   test:
+    name: pytest (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14", "3.15"]
     steps:
 
       - name: Checkout Code
         uses: actions/checkout@v7
 
       - name: Set up Python
+        id: setup-python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
 
       - name: Bootstrap poetry
         shell: bash
@@ -38,7 +44,7 @@ jobs:
         id: cache
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ steps.full-python-version.outputs.version }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
