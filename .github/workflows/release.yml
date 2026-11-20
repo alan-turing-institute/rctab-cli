@@ -15,7 +15,7 @@ jobs:
 
       - name: Check that tag and package versions match
         run: |
-          PYPROJECT_VERSION=$(sed -n '3p' pyproject.toml | sed "s/version = //")
+          PYPROJECT_VERSION=$(grep -m1 '^version = ' pyproject.toml | sed "s/version = //")
           GITHUB_VERSION=${{ github.event.release.tag_name }}
           if [[ "$PYPROJECT_VERSION" != "\"$GITHUB_VERSION\"" ]]
           then

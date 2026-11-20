@@ -6,13 +6,8 @@ Attributes:
 
 import logging
 import os
-
-try:
-    from importlib import metadata  # type: ignore
-except ImportError:  # for Python<3.8
-    import importlib_metadata as metadata  # type: ignore
-
 from datetime import datetime
+from importlib import metadata
 from pathlib import Path
 from typing import Dict, Union
 

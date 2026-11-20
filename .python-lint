@@ -5,6 +5,9 @@
 # run arbitrary code.
 extension-pkg-whitelist=pydantic
 
+# Minimum Python version to use for version dependent checks.
+py-version=3.12
+
 # Specify a score threshold to be exceeded before program exits with error.
 fail-under=10.0
 
