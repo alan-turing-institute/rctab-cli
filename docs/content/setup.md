@@ -9,6 +9,8 @@ pip install git+https://github.com/alan-turing-institute/rctab-cli
 ## Developer Install
 
 To get started install [Poetry](https://python-poetry.org/docs/).
+`pyproject.toml` sets a minimum Poetry version with `requires-poetry`, so upgrade Poetry if it refuses to run.
+Nothing updates that minimum automatically: bump it by hand when we need a newer Poetry feature.
 
 Then from the root of the repository, install dependencies and activate a Poetry shell, which we will assume is active for the rest of the document, with
 

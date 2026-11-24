@@ -14,6 +14,11 @@ name = "rctab_cli"
 requires-python = ">=3.12"
 version = "1.2.0"
 
+[tool.poetry]
+# Oldest Poetry that may work on this project. Not managed by Renovate:
+# bump it by hand when we need a newer Poetry feature.
+requires-poetry = ">=2.4"
+
 [tool.poetry.dependencies]
 msal = "^1.31.0"
 typer = ">=0.16.0,<1.0.0"
